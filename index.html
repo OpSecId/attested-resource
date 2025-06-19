@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Attested Resource</title>
+  <script src="https://www.w3.org/Tools/respec/respec-w3c.js" class="remove"></script>
+  <script class="remove">
+    var respecConfig = {
+      specStatus: "ED",
+      shortName: "attested-resource",
+      editors: [{
+        name: "Open Security and Identity",
+        url: "https://opsecid.org"
+      }],
+      github: "https://github.com/opsecid/attested-resource",
+      edDraftURI: "https://opsecid.github.io/attested-resource/",
+      latestVersion: "https://opsecid.github.io/attested-resource/",
+      license: "w3c-software-doc",
+      publishDate: "2025-06-19",
+      subtitle: "A Specification for Self-Referential Web Resources",
+      logos: [],
+      previousMaturity: null,
+      previousPublishDate: null,
+      lint: { "no-unused-dfns": false },
+      localBiblio: {
+        "DATA-INTEGRITY": {
+          title: "Data Integrity",
+          href: "https://www.w3.org/TR/vc-data-integrity/",
+          publisher: "W3C"
+        },
+        "VC-DATA-MODEL-2.0": {
+          title: "Verifiable Credentials Data Model v2.0",
+          href: "https://www.w3.org/TR/vc-data-model-2.0/",
+          publisher: "W3C"
+        },
+        "URDNA2015": {
+          title: "JSON-LD Canonicalization (URDNA2015)",
+          href: "https://json-ld.github.io/normalization/spec/",
+          publisher: "JSON-LD Community Group"
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+  <section id="abstract">
+    <p>This specification defines a data model for web-based resources that are uniquely identified by a Self-Referential Identifier (SRID), derived from the content of the resource itself. An Attested Resource is a JSON-LD document with three core properties: <code>content</code>, <code>metadata</code>, and <code>links</code>. Each resource is self-contained, cryptographically verifiable, and references its own SRID as its filename. Proofs over the resource use the <a data-cite="DATA-INTEGRITY">Data Integrity</a> specification for tamper-evident publication.</p>
+  </section>
+
+  <section id="sotd"></section>
+
+  <section>
+    <h2>Introduction</h2>
+    <p>The Attested Resource specification enables the creation of structured JSON documents with cryptographic integrity guarantees and self-referential identities. These documents can be published on the web and used as components in trust systems and decentralized data architectures.</p>
+  </section>
+
+  <section>
+    <h2>Use Cases</h2>
+    <ul>
+      <li>Publishing verifiable datasets or data fragments</li>
+      <li>Decentralized identifiers for content resources</li>
+      <li>Immutable web objects used in registries, catalogs, or distributed ledgers</li>
+      <li>Federated attestations for open knowledge systems</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Terminology</h2>
+    <p>Key words such as "MUST", "SHOULD", and "MAY" are to be interpreted as described in <a href="https://datatracker.ietf.org/doc/html/rfc2119">RFC 2119</a>.</p>
+    <ul>
+      <li><strong>Attested Resource</strong>: A JSON-LD document containing <code>content</code>, <code>metadata</code>, <code>links</code>, and a <code>proof</code>.</li>
+      <li><strong>Self-Referential Identifier (SRID)</strong>: A cryptographic hash of the resource’s canonical content, used as the filename and <code>id</code> field.</li>
+      <li><strong>Proof</strong>: A digital signature over the canonicalized document as defined by <a data-cite="DATA-INTEGRITY">Data Integrity</a>.</li>
+      <li><strong>Canonicalization</strong>: A deterministic transformation of the JSON-LD document into a normalized form (e.g., <a data-cite="URDNA2015">URDNA2015</a>).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Conformance</h2>
+    <p>This specification uses the conformance terminology from RFC 2119. Conforming implementations MUST support the generation and verification of Attested Resources using canonicalization and proof mechanisms defined in <a data-cite="DATA-INTEGRITY">Data Integrity</a>. Producers MUST use the SRID as the <code>id</code> and filename of the published file.</p>
+  </section>
+
+  <section>
+    <h2>Data Model</h2>
+    <section>
+      <h3>AttestedResource</h3>
+      <pre class="highlight">
+{
+  "@context": "https://opsecid.github.io/attested-resource/v1",
+  "id": "urn:srid:sha256-<hash>",
+  "type": "AttestedResource",
+  "content": {},
+  "metadata": {},
+  "links": [],
+  "proof": {}
+}
+      </pre>
+    </section>
+    <section>
+      <h3>Self-Referential Identifier (SRID)</h3>
+      <p>The <code>id</code> of the Attested Resource is a URN constructed as:</p>
+      <pre><code>urn:srid:sha256-&lt;base64url(hash(content))&gt;</code></pre>
+      <p>Where <code>content</code> is the canonicalized form of the <code>content</code> property using URDNA2015, and the hash algorithm is SHA-256.</p>
+    </section>
+    <section>
+      <h3>Proof</h3>
+      <p>Proofs MUST conform to the <a data-cite="DATA-INTEGRITY">Data Integrity</a> specification and use a canonicalization method such as URDNA2015.</p>
+    </section>
+  </section>
+
+  <section>
+    <h2>Processing Rules</h2>
+    <section>
+      <h3>Generating an Attested Resource</h3>
+      <ol>
+        <li>Canonicalize the <code>content</code> property.</li>
+        <li>Compute the SRID from the SHA-256 hash of the canonicalized content.</li>
+        <li>Assemble the JSON-LD document using the data model.</li>
+        <li>Set <code>id</code> to the computed SRID.</li>
+        <li>Sign the document and attach the proof.</li>
+        <li>Publish the file as <code>&lt;SRID&gt;.json</code>.</li>
+      </ol>
+    </section>
+    <section>
+      <h3>Verifying an Attested Resource</h3>
+      <ol>
+        <li>Verify the filename matches the <code>id</code>.</li>
+        <li>Recompute the SRID from the canonicalized <code>content</code>.</li>
+        <li>Ensure the <code>id</code> field equals the recomputed SRID.</li>
+        <li>Validate the <code>proof</code> using the correct public key and suite.</li>
+      </ol>
+    </section>
+  </section>
+
+  <section>
+    <h2>Security Considerations</h2>
+    <ul>
+      <li>Ensure the canonicalization algorithm is deterministic and reproducible.</li>
+      <li>Signatures should be verified using trusted public keys.</li>
+      <li>Replay and versioning risks should be handled externally if required.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Privacy Considerations</h2>
+    <ul>
+      <li>Do not include sensitive information in <code>content</code> unless intentional.</li>
+      <li>Linkability through <code>metadata</code> and <code>links</code> may occur.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Acknowledgments</h2>
+    <p>Thanks to the Open Security and Identity contributors and the broader decentralized web community for ongoing support and feedback.</p>
+  </section>
+</body>
+</html>
