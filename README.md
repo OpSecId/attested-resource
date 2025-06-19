@@ -1,2 +1,14 @@
-# attested-resource
-Attested Resource Specification
+# Attested Resource Specification
+
+
+### AttestedResource
+
+#### digestMultibase
+
+#### content
+
+#### metadata
+
+#### links
+
+#### proof
