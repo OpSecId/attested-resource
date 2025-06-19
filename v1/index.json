@@ -1,29 +1,30 @@
 {
     "@context": {
+        "@version": 1.1,
         "@protected": true,
-        "id": "@id",
-        "type": "@type",
-        "digestMultibase": {
-            "@id": "https://w3id.org/security#digestMultibase",
-            "@type": "https://w3id.org/security#multibase"
-        },
         "AttestedResource": {
             "@id": "https://opsecid.github.io/attested-resource/#attestedresource",
-            "@protected": true,
             "@context": {
+                "@protected": true,
                 "content": {
                     "@id": "https://opsecid.github.io/attested-resource/#content",
-                    "@type": "@id",
-                    "@vocab": "vocab"
+                    "@type": "@json"
                 },
                 "metadata": {
                     "@id": "https://opsecid.github.io/attested-resource/#metadata",
-                    "@type": "@id",
-                    "@vocab": "vocab"
+                    "@type": "@json"
                 },
                 "links": {
                     "@id": "https://opsecid.github.io/attested-resource/#links",
-                    "@type": "@id"
+                    "@type": "@id",
+                    "@context": {
+                        "@protected": true,
+                        "id": "@id",
+                        "digestMultibase": {
+                            "@id": "https://w3id.org/security#digestMultibase",
+                            "@type": "https://w3id.org/security#multibase"
+                        }
+                    }
                 }
             }
         }
