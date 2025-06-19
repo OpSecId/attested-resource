@@ -1,6 +1,6 @@
 {
     "@context": {
-        "@protected": True,
+        "@protected": true,
         "id": "@id",
         "type": "@type",
         "digestMultibase": {
@@ -9,7 +9,7 @@
         },
         "AttestedResource": {
             "@id": "https://www.w3.org/ns/credentials/undefined-term#AttestedResource",
-            "@protected": True,
+            "@protected": true,
             "@context": {
                 "content": {
                     "@id": "https://www.w3.org/ns/credentials/undefined-term#content",
