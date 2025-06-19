@@ -3,12 +3,8 @@
 
 ### AttestedResource
 
-#### digestMultibase
-
 #### content
 
 #### metadata
 
 #### links
-
-#### proof
